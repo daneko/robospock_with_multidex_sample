@@ -38,6 +38,9 @@ android {
         debug {
             multiDexEnabled true
         }
+        spock {
+            multiDexEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -84,8 +87,8 @@ retrolambda {
     javaVersion JavaVersion.VERSION_1_7
 }
 
-task zip2jar(type: Jar, dependsOn: ['compileDebugJava']) {
-    from 'build/intermediates/classes/debug'
+task zip2jar(type: Jar, dependsOn: ['compileSpockJava']) {
+    from 'build/intermediates/classes/spock'
     destinationDir = file('build/libs')
 }
 
