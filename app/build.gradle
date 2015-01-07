@@ -74,6 +74,8 @@ dependencies {
 
     // multidexを試すためだけに追加
     compile 'com.google.guava:guava:18.0'
+
+    debugCompile 'com.android.support:multidex:1.0.1'
 }
 
 retrolambda {
