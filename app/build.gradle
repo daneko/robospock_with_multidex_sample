@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.4.1'
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def j8Home = properties.getProperty('java8_home')
+def j7Home = properties.getProperty('java7_home')
+
+apply plugin: 'com.android.application'
+apply plugin: 'retrolambda'
+
+android {
+
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId "com.example.myapplication"
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        debug {
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dexOptions {
+        javaMaxHeapSize '4g'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:appcompat-v7:21.0.3'
+
+    compile 'com.jakewharton:butterknife:6.0.0'
+
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:1.8.0'
+}
+
+retrolambda {
+    jdk j8Home ?: System.getenv("JAVA8_HOME")
+    oldJdk j7Home ?: System.getenv("JAVA7_HOME")
+    javaVersion JavaVersion.VERSION_1_7
+}
+
+task zip2jar(type: Jar, dependsOn: ['compileDebugJava']) {
+    from 'build/intermediates/classes/debug'
+    destinationDir = file('build/libs')
+}
+
